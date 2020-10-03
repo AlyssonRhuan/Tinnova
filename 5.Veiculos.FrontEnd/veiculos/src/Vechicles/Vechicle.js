@@ -1,16 +1,15 @@
 import api from '../services/api';
 import ModalVehicle from './ModalVehicle';
-import Table from '../components/Table';
 import Loading from '../components/Loading';
 import React, { useState, useEffect } from 'react';
-import VehicleDataTableConfig from './VehicleDataTableConfig';
+import { FaEdit, FaRegTimesCircle } from 'react-icons/fa';
 import ModalConfirmation from '../utils/ModalConfirmationUtils';
 
 const END_POINT = 'veiculos'
 const PAGE_TITLE = 'Vehicle'
 
 function Vehicle() {
-  const [vehicles, setVehicles] = useState();
+  const [vehicles, setVehicles] = useState([]);
   const [vehicleToAction, setVechileToAction] = useState();
   const [modal, setModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -96,8 +95,8 @@ function Vehicle() {
   }
 
   function getTotalSale() {
-    let qtdSolde = vehicles.reduce(vehicle => vehicle.isSold)
-    return qtdSolde;
+    let qtdSolde = vehicles.filter(vehicle => vehicle.isSold)
+    return qtdSolde.length;
   }
 
   function error(e) {
@@ -126,7 +125,7 @@ function Vehicle() {
 
           <div style={{ alignItems: 'center' }} className="col-12 row justify-content-between mx-0 px-0">
             <span>
-              Total sold vehicles: {getTotalSale}
+              Total sold vehicles: {getTotalSale()}
             </span>
           </div>
 
@@ -138,39 +137,41 @@ function Vehicle() {
 
           <div style={{ alignItems: 'center' }} className="col-12 row justify-content-between mx-0 px-0">
             <span>
-              Vechicles by brand: 12
+              Vechicles by brand: {vehicles.length}
             </span>
           </div>
-            
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">Vehicle</th>
-                  <th scope="col">Brand</th>
-                  <th scope="col">Year</th>
-                  <th scope="col">Sold</th>
-                </tr>
-              </thead>
-            <tbody>                 
 
-          {
-            vehicles && vehicles.map(
-              (key, vehicle) => console.log(vehicle)
-            )
-            }                     
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Vehicle</th>
+                <th scope="col">Brand</th>
+                <th scope="col">Year</th>
+                <th scope="col">Sold</th>
+                <th scope="col">Edit</th>
+              </tr>
+            </thead>
+            <tbody>
 
-          {
-            vehicles && vehicles.map(
-              (key, vehicle) => <tr key={key}>
-                      <td>{vehicle}</td>
+              {
+                vehicles.map(
+                  vehicle => {
+                    return (<tr key={vehicle.id}>
+                      <td>{vehicle.vehicle}</td>
                       <td>{vehicle.brand}</td>
                       <td>{vehicle.year}</td>
                       <td>{vehicle.isSold ? "Yes" : "No"}</td>
-                    </tr>
-              )
-            }              
-                    </tbody> 
-              </table>
+                      <td >
+                          <a onClick={() => openModal('EDI', vehicle)}>Edit</a>
+                          <a onClick={() => openModal('EDI', vehicle)}>Solded</a>
+                          <a onClick={() => openModal('EDI', vehicle)}>Delete</a>
+                      </td>
+                    </tr>)
+                  }
+                )
+              }
+            </tbody>
+          </table>
         </section>
       }
       <section>

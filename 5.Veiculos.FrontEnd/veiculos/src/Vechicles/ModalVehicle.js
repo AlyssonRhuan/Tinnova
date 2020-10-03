@@ -1,28 +1,20 @@
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import React, { useState, useEffect } from 'react';
 import api from '../services/api'
+import Vehicle from './Vechicle';
 
 function ModalComponent(props) {
   const [isOpen, setIsOpen] = useState(false)
-  const [product, setProduct] = useState({ prodcutDigital: false, visible: true })
-
-  // VARIAVEIS UTILIZAVEIS NO MODAL
-  const [listCategorys, setListCategorys] = useState();
+  const [vehicle, setVehicle] = useState({ isSold: false })
 
   useEffect(() => {
-    getListCategorys();
     setIsOpen(props.isOpen);
     onEditModal();
   }, [])
 
-  async function getListCategorys() {
-    const dados = await api.get(`category/valuelabel`);
-    setListCategorys(dados.data);
-  }
-
   function onEditModal() {
     if (props.data !== undefined) {
-      setProduct(props.data)
+      setVehicle(props.data)
     }
   }
 
@@ -32,7 +24,7 @@ function ModalComponent(props) {
   }
 
   function saveModal() {
-    props.onSave(product)
+    props.onSave(vehicle)
     setIsOpen(!isOpen)
   }
 
@@ -47,24 +39,34 @@ function ModalComponent(props) {
 
           <ModalBody className="row">
             <div className="form-group col-12">
-              <label htmlFor='nomeProduto'>Name</label>
+              <label htmlFor='nomeProduto'>Brand</label>
               <input type='text' className="form-control" id='nomeProduto' placeholder='Nome do produto'
-                onChange={event => setProduct({ ...product, name: event.target.value })} value={product.name} />
+                onChange={event => setVehicle({ ...vehicle, brand: event.target.value })} value={vehicle.brand} />
+            </div>
+
+            <div className="form-group col-12">
+              <label htmlFor='nomeProduto'>Description</label>
+              <input type='text' className="form-control" id='nomeProduto' placeholder='Nome do produto'
+                onChange={event => setVehicle({ ...vehicle, description: event.target.value })} value={vehicle.description} />
+            </div>
+
+            <div className="form-group col-12">
+              <label htmlFor='nomeProduto'>Vehicle</label>
+              <input type='text' className="form-control" id='nomeProduto' placeholder='Nome do produto'
+                onChange={event => setVehicle({ ...vehicle, vehicle: event.target.value })} value={vehicle.vehicle} />
+            </div>
+
+            <div className="form-group col-6">
+              <label htmlFor='nomeProduto'>Year</label>
+              <input type='text' className="form-control" id='nomeProduto' placeholder='Nome do produto'
+                onChange={event => setVehicle({ ...vehicle, year: event.target.value })} value={vehicle.year} />
             </div>
 
             <div className="form-group col-6">
               <div className="custom-control custom-switch">
-                <input type="checkbox" className="custom-control-input" id="switchDigital" checked={product.prodcutDigital}
-                  onChange={event => setProduct({ ...product, prodcutDigital: event.target.checked })} />
-                <label className="custom-control-label" htmlFor="switchDigital">Product digital</label>
-              </div>
-            </div>
-
-            <div className="form-group col-6">
-              <div className="custom-control custom-switch">
-                <input type="checkbox" className="custom-control-input" id="switchVisivel" checked={product.visible}
-                  onChange={event => setProduct({ ...product, visible: event.target.checked })} />
-                <label className="custom-control-label" htmlFor="switchVisivel">Product {product.visible ? "visible" : "invisible"}</label>
+                <input type="checkbox" className="custom-control-input" id="switchVisivel" checked={vehicle.isSold}
+                  onChange={event => setVehicle({ ...vehicle, isSold: event.target.checked })} />
+                <label className="custom-control-label" htmlFor="switchVisivel">Veichle {vehicle.isSold ? "sold" : "not sold"}</label>
               </div>
             </div>
           </ModalBody>
